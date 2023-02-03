@@ -8,12 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
 
     CalculatorCase calculator;
+    String textReversed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +67,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteChar(TextView txvResult){
         String actualText = txvResult.getText().toString().isEmpty() ? " " : txvResult.getText().toString();
+        StringBuilder stringBuilder = new StringBuilder(actualText);
+
+        textReversed = stringBuilder.reverse().toString();
+
         String newText;
-        if (actualText.contains("+") || actualText.contains("*")){
+        if ((actualText.contains("+") || actualText.contains("*"))){
             String charToReplace = actualText.contains("+") ? "\\+" : "\\*";
-            newText = actualText.replaceFirst(charToReplace, "");
-            txvResult.setText(newText);
+            if (String.valueOf(actualText.charAt(actualText.length() -1)).equals("*") ||
+                    String.valueOf(actualText.charAt(actualText.length() -1)).equals("+")){
+                newText = textReversed.replaceFirst(charToReplace, "");
+                txvResult.setText(new StringBuilder(newText).reverse());
+            }else{
+                newText = textReversed.replaceFirst(String.valueOf(actualText.charAt(actualText.length() -1)), "");
+                txvResult.setText(new StringBuilder(newText).reverse());
+            }
+
         }else {
-            newText = actualText.replaceFirst(String.valueOf(actualText.charAt(actualText.length() -1)), "");
-            txvResult.setText(newText);
+            newText = textReversed.replaceFirst(String.valueOf(actualText.charAt(actualText.length() -1)), "");
+            txvResult.setText(new StringBuilder(newText).reverse());
         }
 
     }
