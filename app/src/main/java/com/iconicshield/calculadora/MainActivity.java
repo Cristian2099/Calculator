@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         Button btnClear = findViewById(R.id.btnClear);
         Button btnDelete = findViewById(R.id.btnDelete);
         TextView txvResult = findViewById(R.id.txvResult);
-        calculator = new CalculatorCase(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven,
-                btnEight, btnNine, btnZero, btnPoint, btnEqual, btnAdd, btnSubstract, btnMultiply, btnDivide, txvResult);
 
         writeInScreen(List.of(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight,
                 btnNine, btnZero, btnPoint, btnAdd, btnSubstract, btnMultiply, btnDivide), txvResult);
