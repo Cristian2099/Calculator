@@ -2,6 +2,7 @@ package com.iconicshield.calculadora;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,7 +13,7 @@ import java.util.function.Function;
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
-    public static final String SPACE_STRING = " ";
+    boolean existSign = false;
     public static final String EMPTY_STRING = "";
     public static final String PLUS_SIGN_STRING = "+";
     public static final String SUBSTRACT_SIGN_STRING = "-";
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String PLUS_SIGN_CLEAN = "\\+";
     public static final String MULTI_SIGN_STRING = "*";
     public static final String MULTI_SIGN_CLEAN = "\\*";
+
+    public static final List<String> SIGNS = List.of(PLUS_SIGN_STRING, SUBSTRACT_SIGN_STRING,
+            MULTI_SIGN_STRING, DIV_SIGN_STRING);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(view -> System.out.println(RemoveCharFromResult(txvResult)));
 
         btnClear.setOnClickListener(view -> deleteAll(txvResult));
+
+        btnEqual.setOnClickListener(view -> System.out.println(realizeOperation(txvResult)));
     }
 
     /**
@@ -59,11 +65,23 @@ public class MainActivity extends AppCompatActivity {
      * @param buttons: Lista de botones a los cuales se les agregará la opción de escritura en txvResult.
      * @param txvResult: TextView de destino para escribir el texto de los botones.
      */
+
     public void writeInScreen(List<Button> buttons, TextView txvResult){
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
-            String newText = actualText + button.getText();
-            txvResult.setText(newText);
+            for (char c: actualText.toCharArray()) {
+                existSign = SIGNS.contains(String.valueOf(c));
+            }
+            String buttonText = button.getText().toString();
+            if (SIGNS.contains(buttonText) && existSign){
+                System.out.println("Sign already exist.");
+            }else{
+                if (SIGNS.contains(buttonText)){
+                    existSign = true;
+                }
+                String newText = actualText + buttonText;
+                txvResult.setText(newText);
+            }
         }));
     }
 
@@ -113,9 +131,31 @@ public class MainActivity extends AppCompatActivity {
         txvResult.setText(new StringBuilder(newTextToSet).reverse());
     }
 
-    public void realizeOperation(TextView txvResult){
+    public String realizeOperation(TextView txvResult){
         String actualText = txvResult.getText().toString();
-        String actualTextValidated = actualText.isEmpty() ? SPACE_STRING : actualText;
+        char sign = '0';
+        if (actualText.isEmpty()){
+            return "Actual text is empty.";
+        }
 
+        char[] actualTextOnArray = actualText.toCharArray();
+
+        for (char c: actualTextOnArray) {
+            sign = Character.isDigit(c) ? sign : c;
+        }
+
+        String signStr = String.valueOf(sign);
+
+        if (signStr.equals("0")){
+            return "Operation not found.";
+        }else{
+            signStr = signStr.equals(PLUS_SIGN_STRING) ? PLUS_SIGN_CLEAN :
+                    signStr.equals(MULTI_SIGN_STRING) ? MULTI_SIGN_CLEAN :
+                            signStr.equals(SUBSTRACT_SIGN_STRING) ?
+                                    SUBSTRACT_SIGN_STRING : DIV_SIGN_STRING;
+        }
+
+        String[] actualTextDivided = actualText.split(signStr);
+        return "";
     }
 }
