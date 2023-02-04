@@ -1,29 +1,21 @@
 package com.iconicshield.calculadora;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.iconicshield.calculadora.SignsEnum.*;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
-import java.util.function.Function;
 
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
     boolean existSign = false;
-    public static final String EMPTY_STRING = "";
-    public static final String PLUS_SIGN_STRING = "+";
-    public static final String SUBSTRACT_SIGN_STRING = "-";
-    public static final String DIV_SIGN_STRING = "/";
-    public static final String PLUS_SIGN_CLEAN = "\\+";
-    public static final String MULTI_SIGN_STRING = "*";
-    public static final String MULTI_SIGN_CLEAN = "\\*";
-
-    public static final List<String> SIGNS = List.of(PLUS_SIGN_STRING, SUBSTRACT_SIGN_STRING,
-            MULTI_SIGN_STRING, DIV_SIGN_STRING);
+    public static final List<String> SIGNS = List.of(PLUS_SIGN_STRING.toString(), SUBSTRACT_SIGN_STRING.toString(),
+            MULTI_SIGN_STRING.toString(), DIV_SIGN_STRING.toString());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +61,11 @@ public class MainActivity extends AppCompatActivity {
     public void writeInScreen(List<Button> buttons, TextView txvResult){
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
-            for (char c: actualText.toCharArray()) {
-                existSign = SIGNS.contains(String.valueOf(c));
+            if (actualText.contains(PLUS_SIGN_STRING.toString()) ||
+                    actualText.contains(SUBSTRACT_SIGN_STRING.toString()) ||
+                    actualText.contains(MULTI_SIGN_STRING.toString()) ||
+                    actualText.contains(DIV_SIGN_STRING.toString())){
+                existSign = true;
             }
             String buttonText = button.getText().toString();
             if (SIGNS.contains(buttonText) && existSign){
@@ -102,20 +97,19 @@ public class MainActivity extends AppCompatActivity {
         lastChar = getLastChar(actualText);
 
         actualTextReversed = new StringBuilder(actualText).reverse().toString();
-        if ((actualText.contains(PLUS_SIGN_STRING) || actualText.contains(MULTI_SIGN_STRING))){
-            String signClean = actualText.contains(PLUS_SIGN_STRING) ?
-                    PLUS_SIGN_CLEAN : MULTI_SIGN_CLEAN;
+        if ((actualText.contains(PLUS_SIGN_STRING.toString()) || actualText.contains(MULTI_SIGN_STRING.toString()))){
+            String signClean = actualText.contains(PLUS_SIGN_STRING.toString()) ?
+                    PLUS_SIGN_CLEAN.toString() : MULTI_SIGN_CLEAN.toString();
 
-            if (lastChar.equals(MULTI_SIGN_STRING) || lastChar.equals(PLUS_SIGN_STRING)){
-                replaceCharInTextView(txvResult, signClean, EMPTY_STRING);
+            if (lastChar.equals(MULTI_SIGN_STRING.toString()) || lastChar.equals(PLUS_SIGN_STRING.toString())){
+                replaceCharInTextView(txvResult, signClean, EMPTY_STRING.toString());
             }else{
-                replaceCharInTextView(txvResult, lastChar, EMPTY_STRING);
+                replaceCharInTextView(txvResult, lastChar, EMPTY_STRING.toString());
             }
         }else {
-            replaceCharInTextView(txvResult, lastChar, EMPTY_STRING);
+            replaceCharInTextView(txvResult, lastChar, EMPTY_STRING.toString());
         }
         return "Text setted successful.";
-
     }
 
     public void deleteAll(TextView txvResult){
@@ -149,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
         if (signStr.equals("0")){
             return "Operation not found.";
         }else{
-            signStr = signStr.equals(PLUS_SIGN_STRING) ? PLUS_SIGN_CLEAN :
-                    signStr.equals(MULTI_SIGN_STRING) ? MULTI_SIGN_CLEAN :
-                            signStr.equals(SUBSTRACT_SIGN_STRING) ?
-                                    SUBSTRACT_SIGN_STRING : DIV_SIGN_STRING;
+            signStr = signStr.equals(PLUS_SIGN_STRING.toString()) ? PLUS_SIGN_CLEAN.toString() :
+                    signStr.equals(MULTI_SIGN_STRING.toString()) ? MULTI_SIGN_CLEAN.toString() :
+                            signStr.equals(SUBSTRACT_SIGN_STRING.toString()) ?
+                                    SUBSTRACT_SIGN_STRING.toString() : DIV_SIGN_STRING.toString();
         }
 
         String[] actualTextDivided = actualText.split(signStr);
