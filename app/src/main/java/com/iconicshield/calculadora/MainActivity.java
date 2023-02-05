@@ -8,14 +8,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import static com.iconicshield.calculadora.Calculator.*;
 
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
     boolean existSign = false;
-    public static final List<String> SIGNS = List.of(PLUS_SIGN_STRING.toString(), SUBSTRACT_SIGN_STRING.toString(),
-            MULTI_SIGN_STRING.toString(), DIV_SIGN_STRING.toString());
+    String emptyString = "";
+    public static Map<SignsEnum, String> SIGNS = Calculator.SIGNS;
+    Calculator calculator = new Calculator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +66,15 @@ public class MainActivity extends AppCompatActivity {
     public void writeInScreen(List<Button> buttons, TextView txvResult){
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
-            if (actualText.contains(PLUS_SIGN_STRING.toString()) ||
-                    actualText.contains(SUBSTRACT_SIGN_STRING.toString()) ||
-                    actualText.contains(MULTI_SIGN_STRING.toString()) ||
-                    actualText.contains(DIV_SIGN_STRING.toString())){
-                existSign = true;
-            }
+            existSign = actualText.contains(plusSignString) ||
+                    actualText.contains(substractSignString) ||
+                    actualText.contains(multiSignString) ||
+                    actualText.contains(divSignString);
             String buttonText = button.getText().toString();
-            if (SIGNS.contains(buttonText) && existSign){
+            if (SIGNS.containsValue(buttonText) && existSign){
                 System.out.println("Sign already exist.");
             }else{
-                if (SIGNS.contains(buttonText)){
+                if (SIGNS.containsValue(buttonText)){
                     existSign = true;
                 }
                 String newText = actualText + buttonText;
@@ -97,17 +100,17 @@ public class MainActivity extends AppCompatActivity {
         lastChar = getLastChar(actualText);
 
         actualTextReversed = new StringBuilder(actualText).reverse().toString();
-        if ((actualText.contains(PLUS_SIGN_STRING.toString()) || actualText.contains(MULTI_SIGN_STRING.toString()))){
-            String signClean = actualText.contains(PLUS_SIGN_STRING.toString()) ?
-                    PLUS_SIGN_CLEAN.toString() : MULTI_SIGN_CLEAN.toString();
+        if ((actualText.contains(plusSignString) || actualText.contains(multiSignString))){
+            String signClean = actualText.contains(plusSignString) ?
+                    plusSignClean : multiSignClean;
 
-            if (lastChar.equals(MULTI_SIGN_STRING.toString()) || lastChar.equals(PLUS_SIGN_STRING.toString())){
-                replaceCharInTextView(txvResult, signClean, EMPTY_STRING.toString());
+            if (lastChar.equals(multiSignString) || lastChar.equals(plusSignString)){
+                replaceCharInTextView(txvResult, signClean, emptyString);
             }else{
-                replaceCharInTextView(txvResult, lastChar, EMPTY_STRING.toString());
+                replaceCharInTextView(txvResult, lastChar, emptyString);
             }
         }else {
-            replaceCharInTextView(txvResult, lastChar, EMPTY_STRING.toString());
+            replaceCharInTextView(txvResult, lastChar, emptyString);
         }
         return "Text setted successful.";
     }
@@ -126,8 +129,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String realizeOperation(TextView txvResult){
-        String actualText = txvResult.getText().toString();
+        String actualText, signStr;
+        List<String> actualTextDivided;
         char sign = '0';
+        actualText = txvResult.getText().toString();
         if (actualText.isEmpty()){
             return "Actual text is empty.";
         }
@@ -135,21 +140,28 @@ public class MainActivity extends AppCompatActivity {
         char[] actualTextOnArray = actualText.toCharArray();
 
         for (char c: actualTextOnArray) {
-            sign = Character.isDigit(c) ? sign : c;
+            sign = SIGNS.containsValue(String.valueOf(c)) ? c : sign;
         }
 
-        String signStr = String.valueOf(sign);
+        signStr = String.valueOf(sign);
 
         if (signStr.equals("0")){
             return "Operation not found.";
         }else{
-            signStr = signStr.equals(PLUS_SIGN_STRING.toString()) ? PLUS_SIGN_CLEAN.toString() :
+            signStr = signStr.equals(plusSignString) ? plusSignClean :
                     signStr.equals(MULTI_SIGN_STRING.toString()) ? MULTI_SIGN_CLEAN.toString() :
                             signStr.equals(SUBSTRACT_SIGN_STRING.toString()) ?
                                     SUBSTRACT_SIGN_STRING.toString() : DIV_SIGN_STRING.toString();
         }
 
-        String[] actualTextDivided = actualText.split(signStr);
+        actualTextDivided = Arrays.asList(actualText.split(signStr));
+        if (actualTextDivided.size() < 2){
+            return "Not operation allowed. Second factor is not present.";
+        }
+        calculator.setNum1(Integer.parseInt(actualTextDivided.get(0)));
+        calculator.setNum2(Integer.parseInt(actualTextDivided.get(1)));
+        calculator.setSign(signStr);
+        txvResult.setText(String.valueOf(calculator.realizeOperation()));
         return "";
     }
 }
