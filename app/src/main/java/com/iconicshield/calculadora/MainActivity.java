@@ -1,6 +1,6 @@
 package com.iconicshield.calculadora;
 
-import static com.iconicshield.calculadora.SignsEnum.*;
+import static com.iconicshield.calculadora.SymbolsEnum.*;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -17,9 +17,9 @@ import static com.iconicshield.calculadora.Calculator.*;
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
-    boolean existSign = false;
+    boolean isSign, existSign, isPoint, existPoint = false;
     String emptyString = "";
-    public static Map<SignsEnum, String> SIGNS = Calculator.SIGNS;
+    public static Map<SymbolsEnum, String> SIGNS = Calculator.SIGNS;
     Calculator calculator = new Calculator();
 
     @Override
@@ -66,21 +66,66 @@ public class MainActivity extends AppCompatActivity {
     public void writeInScreen(List<Button> buttons, TextView txvResult){
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
-            existSign = actualText.contains(plusSignString) ||
-                    actualText.contains(substractSignString) ||
-                    actualText.contains(multiSignString) ||
-                    actualText.contains(divSignString);
             String buttonText = button.getText().toString();
-            if (SIGNS.containsValue(buttonText) && existSign){
-                System.out.println("Sign already exist.");
-            }else{
-                if (SIGNS.containsValue(buttonText)){
-                    existSign = true;
-                }
+            isSign = SIGNS.containsValue(buttonText);
+            isPoint = buttonText.contains(pointSymbol);
+            if (isValidSymbol(actualText)){
                 String newText = actualText + buttonText;
                 txvResult.setText(newText);
             }
         }));
+    }
+
+    public boolean isValidSymbol(String actualText){
+        if (isSign){
+            return isValidSign(actualText);
+        }
+
+        if(isPoint){
+            return isValidPoint(actualText);
+        }
+
+        return true;
+    }
+
+    public boolean isValidSign(String actualText){
+        existSign = actualText.contains(plusSignString) ||
+                actualText.contains(substractSignString) ||
+                actualText.contains(multiSignString) ||
+                actualText.contains(divSignString);
+
+        if (existPoint){
+            boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
+            if(!isLastCharPoint){
+                existSign = true;
+                return true;
+            }
+        }
+
+        return !existSign;
+    }
+
+    public boolean isValidPoint(String actualText){
+
+        if (actualText.isEmpty()){
+            return false;
+        }
+        String lastChar = getLastChar(actualText);
+        if (SIGNS.containsValue(lastChar) || lastChar.equals(pointSymbol)){
+            return false;
+        }
+
+        if (existPoint && existSign){
+            Map<String, String> factors = getFactors(actualText);
+            return !String.valueOf(factors.get("second_factor")).contains(pointSymbol);
+        }
+
+        if (actualText.split(pointSymbolClean).length == 2){
+            return false;
+        }
+
+        existPoint = true;
+        return true;
     }
 
     /**
@@ -120,7 +165,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getLastChar(String string){
-        return String.valueOf(string.charAt(string.length() -1));
+        try {
+            return String.valueOf(string.charAt(string.length() -1));
+        }catch (Exception e){
+            return " ";
+        }
     }
 
     public void replaceCharInTextView(TextView txvResult, String charToReplace, String newTextToSet){
@@ -129,15 +178,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String realizeOperation(TextView txvResult){
-        String actualText, signStr;
-        List<String> actualTextDivided;
-        char sign = '0';
-        actualText = txvResult.getText().toString();
+        String actualText = txvResult.getText().toString();
         if (actualText.isEmpty()){
             return "Actual text is empty.";
         }
 
-        char[] actualTextOnArray = actualText.toCharArray();
+        Map<String, String> factorsMap = getFactors(actualText);
+        calculator.setNum1(Double.parseDouble(factorsMap.get("first_factor")));
+        calculator.setNum2(Double.parseDouble(factorsMap.get("second_factor")));
+        calculator.setSign(factorsMap.get("sign"));
+        txvResult.setText(String.valueOf(calculator.realizeOperation()));
+        return "";
+    }
+
+    public String getSign(String string){
+        char sign = '0';
+        String signStr = "";
+        char[] actualTextOnArray = string.toCharArray();
 
         for (char c: actualTextOnArray) {
             sign = SIGNS.containsValue(String.valueOf(c)) ? c : sign;
@@ -154,14 +211,16 @@ public class MainActivity extends AppCompatActivity {
                                     SUBSTRACT_SIGN_STRING.toString() : DIV_SIGN_STRING.toString();
         }
 
-        actualTextDivided = Arrays.asList(actualText.split(signStr));
-        if (actualTextDivided.size() < 2){
-            return "Not operation allowed. Second factor is not present.";
+        return signStr;
+    }
+
+    public Map<String, String> getFactors(String actualText){
+        List<String> actualTextDivided;
+        String actualSign = getSign(actualText);
+        actualTextDivided = Arrays.asList(actualText.split(actualSign));
+        if (actualTextDivided.size() == 2){
+            return Map.of("first_factor", actualTextDivided.get(0), "second_factor", actualTextDivided.get(1), "sign", actualSign);
         }
-        calculator.setNum1(Integer.parseInt(actualTextDivided.get(0)));
-        calculator.setNum2(Integer.parseInt(actualTextDivided.get(1)));
-        calculator.setSign(signStr);
-        txvResult.setText(String.valueOf(calculator.realizeOperation()));
-        return "";
+        return Map.of("first_factor", String.valueOf(0), "second_factor", String.valueOf(0), "sign", substractSignString);
     }
 }
