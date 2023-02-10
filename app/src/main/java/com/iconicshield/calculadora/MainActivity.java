@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 actualText.contains(multiSignString) ||
                 actualText.contains(divSignString);
 
-        if (existPoint){
+        if (existPoint && !existSign){
             boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
             if(!isLastCharPoint){
                 existSign = true;
