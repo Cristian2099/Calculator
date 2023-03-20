@@ -1,32 +1,34 @@
-package com.iconicshield.calculadora;
+package com.iconicshield.calculadora.service;
 
 import static com.iconicshield.calculadora.SymbolsEnum.*;
+
+import com.iconicshield.calculadora.SymbolsEnum;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Calculator {
+public class CalculatorService {
     private Double num1, num2;
     private String sign;
-    static String plusSignString = PLUS_SIGN_STRING.toString();
-    static final String plusSignClean = PLUS_SIGN_CLEAN.toString();
-    static String substractSignString = SUBSTRACT_SIGN_STRING.toString();
-    static String multiSignString = MULTI_SIGN_STRING.toString();
-    static String multiSignClean = MULTI_SIGN_CLEAN.toString();
-    static String divSignString = DIV_SIGN_STRING.toString();
-    static String pointSymbolClean = POINT_SYMBOL_CLEAN.toString();
-    static String pointSymbol = POINT_SYMBOL.toString();
+    public static String plusSignString = PLUS_SIGN_STRING.toString();
+    public static final String plusSignClean = PLUS_SIGN_CLEAN.toString();
+    public static String substractSignString = SUBSTRACT_SIGN_STRING.toString();
+    public static String multiSignString = MULTI_SIGN_STRING.toString();
+    public static String multiSignClean = MULTI_SIGN_CLEAN.toString();
+    public static String divSignString = DIV_SIGN_STRING.toString();
+    public static String pointSymbolClean = POINT_SYMBOL_CLEAN.toString();
+    public static String pointSymbol = POINT_SYMBOL.toString();
     public static final Map<SymbolsEnum, String> SIGNS = Map.of(PLUS_SIGN_STRING, plusSignString,
             SUBSTRACT_SIGN_STRING, substractSignString, MULTI_SIGN_STRING, multiSignString,
             DIV_SIGN_STRING, divSignString, MULTI_SIGN_CLEAN, multiSignClean, PLUS_SIGN_CLEAN, plusSignClean);
 
 
-    public Calculator(){
+    public CalculatorService(){
 
     }
 
-    public Calculator(Double num1, Double num2, String sign){
+    public CalculatorService(Double num1, Double num2, String sign){
         this.num1 = num1;
         this.num2 = num2;
         this.sign = sign;

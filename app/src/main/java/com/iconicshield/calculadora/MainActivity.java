@@ -8,19 +8,21 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.iconicshield.calculadora.Calculator.*;
+import static com.iconicshield.calculadora.service.CalculatorService.*;
+import static com.iconicshield.calculadora.service.UtilService.*;
+import static com.iconicshield.calculadora.service.ValidationService.*;
+
+import com.iconicshield.calculadora.service.CalculatorService;
 
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
     boolean isSign, existSign, isPoint, existPoint = false;
     String emptyString = "";
-    public static Map<SymbolsEnum, String> SIGNS = Calculator.SIGNS;
-    Calculator calculator = new Calculator();
+    CalculatorService calculator = new CalculatorService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,65 +69,13 @@ public class MainActivity extends AppCompatActivity {
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
             String buttonText = button.getText().toString();
-            isSign = SIGNS.containsValue(buttonText);
+            isSign = CalculatorService.SIGNS.containsValue(buttonText);
             isPoint = buttonText.contains(pointSymbol);
-            if (isValidSymbol(actualText)){
+            if (isValidSymbol(actualText, isSign, isPoint, existSign, existPoint)){
                 String newText = actualText + buttonText;
                 txvResult.setText(newText);
             }
         }));
-    }
-
-    public boolean isValidSymbol(String actualText){
-        if (isSign){
-            return isValidSign(actualText);
-        }
-
-        if(isPoint){
-            return isValidPoint(actualText);
-        }
-
-        return true;
-    }
-
-    public boolean isValidSign(String actualText){
-        existSign = actualText.contains(plusSignString) ||
-                actualText.contains(substractSignString) ||
-                actualText.contains(multiSignString) ||
-                actualText.contains(divSignString);
-
-        if (existPoint && !existSign){
-            boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
-            if(!isLastCharPoint){
-                existSign = true;
-                return true;
-            }
-        }
-
-        return !existSign;
-    }
-
-    public boolean isValidPoint(String actualText){
-
-        if (actualText.isEmpty()){
-            return false;
-        }
-        String lastChar = getLastChar(actualText);
-        if (SIGNS.containsValue(lastChar) || lastChar.equals(pointSymbol)){
-            return false;
-        }
-
-        if (existPoint && existSign){
-            Map<String, String> factors = getFactors(actualText);
-            return !String.valueOf(factors.get("second_factor")).contains(pointSymbol);
-        }
-
-        if (actualText.split(pointSymbolClean).length == 2){
-            return false;
-        }
-
-        existPoint = true;
-        return true;
     }
 
     /**
@@ -164,14 +114,6 @@ public class MainActivity extends AppCompatActivity {
         txvResult.setText("");
     }
 
-    public String getLastChar(String string){
-        try {
-            return String.valueOf(string.charAt(string.length() -1));
-        }catch (Exception e){
-            return " ";
-        }
-    }
-
     public void replaceCharInTextView(TextView txvResult, String charToReplace, String newTextToSet){
         newTextToSet = actualTextReversed.replaceFirst(charToReplace, newTextToSet);
         txvResult.setText(new StringBuilder(newTextToSet).reverse());
@@ -191,36 +133,5 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
 
-    public String getSign(String string){
-        char sign = '0';
-        String signStr = "";
-        char[] actualTextOnArray = string.toCharArray();
 
-        for (char c: actualTextOnArray) {
-            sign = SIGNS.containsValue(String.valueOf(c)) ? c : sign;
-        }
-
-        signStr = String.valueOf(sign);
-
-        if (signStr.equals("0")){
-            return "Operation not found.";
-        }else{
-            signStr = signStr.equals(plusSignString) ? plusSignClean :
-                    signStr.equals(MULTI_SIGN_STRING.toString()) ? MULTI_SIGN_CLEAN.toString() :
-                            signStr.equals(SUBSTRACT_SIGN_STRING.toString()) ?
-                                    SUBSTRACT_SIGN_STRING.toString() : DIV_SIGN_STRING.toString();
-        }
-
-        return signStr;
-    }
-
-    public Map<String, String> getFactors(String actualText){
-        List<String> actualTextDivided;
-        String actualSign = getSign(actualText);
-        actualTextDivided = Arrays.asList(actualText.split(actualSign));
-        if (actualTextDivided.size() == 2){
-            return Map.of("first_factor", actualTextDivided.get(0), "second_factor", actualTextDivided.get(1), "sign", actualSign);
-        }
-        return Map.of("first_factor", String.valueOf(0), "second_factor", String.valueOf(0), "sign", substractSignString);
-    }
 }
