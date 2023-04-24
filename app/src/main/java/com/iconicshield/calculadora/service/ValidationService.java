@@ -1,5 +1,6 @@
 package com.iconicshield.calculadora.service;
 
+import static com.iconicshield.calculadora.service.CalculatorService.SIGNS;
 import static com.iconicshield.calculadora.service.CalculatorService.divSignString;
 import static com.iconicshield.calculadora.service.CalculatorService.multiSignString;
 import static com.iconicshield.calculadora.service.CalculatorService.plusSignString;
@@ -9,21 +10,27 @@ import static com.iconicshield.calculadora.service.CalculatorService.substractSi
 import static com.iconicshield.calculadora.service.UtilService.getFactors;
 import static com.iconicshield.calculadora.service.UtilService.getLastChar;
 
+import com.iconicshield.calculadora.MainActivity;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class ValidationService {
 
-    public static boolean isValidSymbol(String actualText, boolean isSign, boolean isPoint, boolean existSign, boolean existPoint){
-        return isSign ? isValidSign(actualText, existSign, existPoint) : isPoint ? isValidPoint(actualText, existSign, existPoint) : true;
+    public static boolean existSign, existPoint = false;
+
+    public static boolean isValidSymbol(String actualText, boolean isSign, boolean isPoint){
+        if (isSign && isValidSign(actualText, existSign, existPoint)) {
+            existSign = true;
+            return true;
+        } else if (isPoint && isValidPoint(actualText, existSign, existPoint)) {
+            existPoint = true;
+            return true;
+        }else return !isPoint && !isSign;
     }
 
     public static boolean isValidSign(String actualText, boolean existSign, boolean existPoint){
-        existSign = actualText.contains(plusSignString) ||
-                actualText.contains(substractSignString) ||
-                actualText.contains(multiSignString) ||
-                actualText.contains(divSignString);
 
         if (existPoint && !existSign){
             boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
@@ -40,21 +47,18 @@ public class ValidationService {
         if (actualText.isEmpty()){
             return false;
         }
+
         String lastChar = getLastChar(actualText);
-        if (CalculatorService.SIGNS.containsValue(lastChar) || lastChar.equals(pointSymbol)){
+
+        if (SIGNS.containsValue(lastChar) | lastChar.equals(pointSymbol)){
             return false;
         }
 
-        if (existPoint && existSign){
-            Map<String, String> factors = getFactors(actualText);
-            return !String.valueOf(factors.get("second_factor")).contains(pointSymbol);
+        if (!existPoint){
+            return true;
         }
 
-        if (actualText.split(pointSymbolClean).length == 2){
-            return false;
-        }
-
-        return true;
+        return !(actualText.split(pointSymbolClean).length == 3) && existSign;
     }
 
 

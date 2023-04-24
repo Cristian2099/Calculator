@@ -8,17 +8,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.iconicshield.calculadora.service.CalculatorService.*;
 import static com.iconicshield.calculadora.service.UtilService.*;
 import static com.iconicshield.calculadora.service.ValidationService.*;
 
 import com.iconicshield.calculadora.service.CalculatorService;
+import com.iconicshield.calculadora.service.ValidationService;
 
 public class MainActivity extends AppCompatActivity {
 
     String actualTextReversed = "";
-    boolean isSign, existSign, isPoint, existPoint = false;
+    boolean isSign, isPoint = false;
     String emptyString = "";
     CalculatorService calculator = new CalculatorService();
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             String buttonText = button.getText().toString();
             isSign = CalculatorService.SIGNS.containsValue(buttonText);
             isPoint = buttonText.contains(pointSymbol);
-            if (isValidSymbol(actualText, isSign, isPoint, existSign, existPoint)){
+            if (isValidSymbol(actualText, isSign, isPoint)){
                 String newText = actualText + buttonText;
                 txvResult.setText(newText);
             }
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteAll(TextView txvResult){
         txvResult.setText("");
+        existPoint = false;
+        existSign = false;
     }
 
     public void replaceCharInTextView(TextView txvResult, String charToReplace, String newTextToSet){
@@ -113,11 +117,13 @@ public class MainActivity extends AppCompatActivity {
             return "Actual text is empty.";
         }
 
-        Map<String, String> factorsMap = getFactors(actualText);
-        calculator.setNum1(Double.parseDouble(factorsMap.get("first_factor")));
-        calculator.setNum2(Double.parseDouble(factorsMap.get("second_factor")));
-        calculator.setSign(factorsMap.get("sign"));
-        txvResult.setText(String.valueOf(calculator.realizeOperation()));
+        Map<String, Object> factorsMap = getFactors(actualText);
+        if (Objects.equals(factorsMap.get("valid_operation"), true)){
+            calculator.setNum1(Double.parseDouble(String.valueOf(factorsMap.get("first_factor"))));
+            calculator.setNum2(Double.parseDouble(String.valueOf(factorsMap.get("second_factor"))));
+            calculator.setSign(String.valueOf(factorsMap.get("sign")));
+            txvResult.setText(String.valueOf(calculator.realizeOperation()));
+        }
         return "";
     }
 
