@@ -1,7 +1,5 @@
 package com.iconicshield.calculadora;
 
-import static com.iconicshield.calculadora.SymbolsEnum.*;
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         writeInScreen(List.of(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight,
                 btnNine, btnZero, btnPoint, btnAdd, btnSubstract, btnMultiply, btnDivide), txvResult);
 
-        btnDelete.setOnClickListener(view -> System.out.println(RemoveCharFromResult(txvResult)));
+        btnDelete.setOnClickListener(view -> System.out.println(RemoveCharTxvResult(txvResult)));
 
         btnClear.setOnClickListener(view -> deleteAll(txvResult));
 
@@ -84,27 +82,17 @@ public class MainActivity extends AppCompatActivity {
      * @param txvResult: TextView desde el cual se obtiene el texto inicial y al cual se le asigna
      *                 el nuevo texto que se arroja como resultado.
      */
-    public String RemoveCharFromResult(TextView txvResult){
+    public String RemoveCharTxvResult(TextView txvResult){
         String actualText, lastChar;
         actualText = txvResult.getText().toString();
 
-        if (actualText.isEmpty()){
-            return "Actual text is empty.";
-        }
-
-        lastChar = getLastChar(actualText);
-
-        actualTextReversed = new StringBuilder(actualText).reverse().toString();
-        if ((actualText.contains(plusSignString) || actualText.contains(multiSignString))){
-            String signClean = actualText.contains(plusSignString) ?
-                    plusSignClean : multiSignClean;
-
-            if (lastChar.equals(multiSignString) || lastChar.equals(plusSignString)){
-                replaceCharInTextView(txvResult, signClean, emptyString);
-            }else{
-                replaceCharInTextView(txvResult, lastChar, emptyString);
+        if (!actualText.isEmpty()){
+            lastChar = getLastChar(actualText);
+            actualTextReversed = new StringBuilder(actualText).reverse().toString();
+            if ((lastChar.contains(plusSignString) || lastChar.contains(multiSignString))){
+                lastChar =  actualText.contains(plusSignString) ?
+                        plusSignClean : multiSignClean;
             }
-        }else {
             replaceCharInTextView(txvResult, lastChar, emptyString);
         }
         return "Text setted successful.";
