@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnClear = findViewById(R.id.btnClear);
         Button btnDelete = findViewById(R.id.btnDelete);
         TextView txvResult = findViewById(R.id.txvResult);
-
+        
         writeInScreen(List.of(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight,
                 btnNine, btnZero, btnPoint, btnAdd, btnSubstract, btnMultiply, btnDivide), txvResult);
 

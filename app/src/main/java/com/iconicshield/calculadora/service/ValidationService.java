@@ -28,7 +28,6 @@ public class ValidationService {
         if (existPoint && !existSign){
             boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
             if(!isLastCharPoint){
-                existSign = true;
                 return true;
             }
         }
@@ -55,7 +54,6 @@ public class ValidationService {
             return false;
         }
 
-        existPoint = true;
         return true;
     }
 

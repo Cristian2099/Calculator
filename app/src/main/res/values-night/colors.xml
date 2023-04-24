@@ -7,8 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="btnBackgroundColor">#9C27B0</color>
-    <color name="btnTxColor">#F2D2F8</color>
-    <color name="txvColor">#F3F3F3</color>
-    <color name="txvTextColor">#AE6FB9</color>
+    <color name="btnBackgroundColor">#B076BA</color>
+    <color name="btnTxColor">#000000</color>
+    <color name="txvColor">#AE6FB9</color>
+    <color name="txvTextColor">#020202</color>
 </resources>
