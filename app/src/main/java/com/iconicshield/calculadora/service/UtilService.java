@@ -17,6 +17,10 @@ import java.util.Objects;
 
 public class UtilService {
 
+    public static String FIRST_FACTOR = "first_factor";
+    public static String SECOND_FACTOR = "second_factor";
+    public static String SIGN = "sign";
+    public static String VALID_OPERATION = "valid_operation";
     public static String getLastChar(String string){
         try {
             return String.valueOf(string.charAt(string.length() -1));
@@ -30,10 +34,10 @@ public class UtilService {
         String actualSign = getSign(actualText);
         actualTextDivided = Arrays.asList(actualText.split(actualSign));
         if (actualTextDivided.size() == 2){
-            return Map.of("first_factor", actualTextDivided.get(0),
-                    "second_factor", actualTextDivided.get(1),
-                    "sign", actualSign,
-                    "valid_operation", true);
+            return Map.of(FIRST_FACTOR, actualTextDivided.get(0),
+                    SECOND_FACTOR, actualTextDivided.get(1),
+                    SIGN, actualSign,
+                    VALID_OPERATION, true);
         }
         return Map.of("valid_operation", false);
     }

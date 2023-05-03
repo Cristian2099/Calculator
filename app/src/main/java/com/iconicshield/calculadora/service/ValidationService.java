@@ -15,6 +15,8 @@ import com.iconicshield.calculadora.MainActivity;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ValidationService {
 
@@ -58,6 +60,11 @@ public class ValidationService {
             return true;
         }
 
+        Map<String, Object> factors = getFactors(actualText);
+        if (Objects.equals(factors.get(UtilService.VALID_OPERATION), true)){
+            String secondFactor = (String)factors.get(UtilService.SECOND_FACTOR);
+            return Objects.requireNonNull(secondFactor).split(pointSymbolClean).length < 2 ;
+        }
         return !(actualText.split(pointSymbolClean).length == 3) && existSign;
     }
 
