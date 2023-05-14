@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             calculator.setNum2(Double.parseDouble(String.valueOf(factorsMap.get("second_factor"))));
             calculator.setSign(String.valueOf(factorsMap.get("sign")));
             txvResult.setText(String.valueOf(calculator.realizeOperation()));
+            existSign = false;
         }
         return "";
     }
