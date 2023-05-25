@@ -7,6 +7,8 @@ import static com.iconicshield.calculadora.service.CalculatorService.plusSignStr
 import static com.iconicshield.calculadora.service.CalculatorService.pointSymbol;
 import static com.iconicshield.calculadora.service.CalculatorService.pointSymbolClean;
 import static com.iconicshield.calculadora.service.CalculatorService.substractSignString;
+import static com.iconicshield.calculadora.service.UtilService.FIRST_FACTOR;
+import static com.iconicshield.calculadora.service.UtilService.VALID_OPERATION;
 import static com.iconicshield.calculadora.service.UtilService.getFactors;
 import static com.iconicshield.calculadora.service.UtilService.getLastChar;
 
@@ -32,16 +34,25 @@ public class ValidationService {
         }else return !isPoint && !isSign;
     }
 
+    /*
+    +
+    2+
+    2+1
+    2+1+
+    2.+
+     */
     public static boolean isValidSign(String actualText, boolean existSign, boolean existPoint){
 
-        if (existPoint && !existSign){
-            boolean isLastCharPoint = getLastChar(actualText).equals(pointSymbol);
-            if(!isLastCharPoint){
-                return true;
-            }
+        if (actualText.isEmpty()){
+            return false;
         }
 
-        return !existSign;
+        Map<String, Object> factors = getFactors(actualText);
+        if (Objects.equals(factors.getOrDefault(VALID_OPERATION, false), true)){
+            return false;
+        }else{
+            return !getLastChar(actualText).equals(pointSymbol);
+        }
     }
 
     public static boolean isValidPoint(String actualText, boolean existSign, boolean existPoint){
