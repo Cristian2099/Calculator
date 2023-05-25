@@ -10,6 +10,8 @@ import static com.iconicshield.calculadora.service.CalculatorService.plusSignCle
 import static com.iconicshield.calculadora.service.CalculatorService.plusSignString;
 import static com.iconicshield.calculadora.service.CalculatorService.substractSignString;
 
+import android.widget.TextView;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -61,5 +63,11 @@ public class UtilService {
         }
 
         return signStr;
+    }
+
+    public static void replaceCharInTextView(TextView txvResult, String actualText, String charToReplace, String newTextToSet){
+        String actualTextReversed = new StringBuilder(actualText).reverse().toString();
+        newTextToSet = actualTextReversed.replaceFirst(charToReplace, newTextToSet);
+        txvResult.setText(new StringBuilder(newTextToSet).reverse());
     }
 }

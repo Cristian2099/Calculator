@@ -12,7 +12,7 @@ public class CalculatorService {
     private Double num1, num2;
     private String sign;
     public static String plusSignString = PLUS_SIGN_STRING.toString();
-    public static final String plusSignClean = PLUS_SIGN_CLEAN.toString();
+    public static String plusSignClean = PLUS_SIGN_CLEAN.toString();
     public static String substractSignString = SUBSTRACT_SIGN_STRING.toString();
     public static String multiSignString = MULTI_SIGN_STRING.toString();
     public static String multiSignClean = MULTI_SIGN_CLEAN.toString();

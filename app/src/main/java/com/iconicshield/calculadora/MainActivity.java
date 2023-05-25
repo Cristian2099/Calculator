@@ -15,11 +15,9 @@ import static com.iconicshield.calculadora.service.UtilService.*;
 import static com.iconicshield.calculadora.service.ValidationService.*;
 
 import com.iconicshield.calculadora.service.CalculatorService;
-import com.iconicshield.calculadora.service.ValidationService;
 
 public class MainActivity extends AppCompatActivity {
 
-    String actualTextReversed = "";
     boolean isSign, isPoint = false;
     String emptyString = "";
     CalculatorService calculator = new CalculatorService();
@@ -47,14 +45,12 @@ public class MainActivity extends AppCompatActivity {
         Button btnClear = findViewById(R.id.btnClear);
         Button btnDelete = findViewById(R.id.btnDelete);
         TextView txvResult = findViewById(R.id.txvResult);
-        
+
         writeInScreen(List.of(btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight,
                 btnNine, btnZero, btnPoint, btnAdd, btnSubstract, btnMultiply, btnDivide), txvResult);
 
-        btnDelete.setOnClickListener(view -> System.out.println(RemoveCharTxvResult(txvResult)));
-
+        btnDelete.setOnClickListener(view -> System.out.println(removeCharTxvResult(txvResult)));
         btnClear.setOnClickListener(view -> deleteAll(txvResult));
-
         btnEqual.setOnClickListener(view -> System.out.println(realizeOperation(txvResult)));
     }
 
@@ -84,18 +80,16 @@ public class MainActivity extends AppCompatActivity {
      * @param txvResult: TextView desde el cual se obtiene el texto inicial y al cual se le asigna
      *                 el nuevo texto que se arroja como resultado.
      */
-    public String RemoveCharTxvResult(TextView txvResult){
+    public String removeCharTxvResult(TextView txvResult){
         String actualText, lastChar;
         actualText = txvResult.getText().toString();
 
         if (!actualText.isEmpty()){
             lastChar = getLastChar(actualText);
-            actualTextReversed = new StringBuilder(actualText).reverse().toString();
             if ((lastChar.contains(plusSignString) || lastChar.contains(multiSignString))){
-                lastChar =  actualText.contains(plusSignString) ?
-                        plusSignClean : multiSignClean;
+                lastChar =  actualText.contains(plusSignString) ? plusSignClean : multiSignClean;
             }
-            replaceCharInTextView(txvResult, lastChar, emptyString);
+            replaceCharInTextView(txvResult, actualText,lastChar, emptyString);
         }
         return "Text setted successful.";
     }
@@ -104,11 +98,6 @@ public class MainActivity extends AppCompatActivity {
         txvResult.setText("");
         existPoint = false;
         existSign = false;
-    }
-
-    public void replaceCharInTextView(TextView txvResult, String charToReplace, String newTextToSet){
-        newTextToSet = actualTextReversed.replaceFirst(charToReplace, newTextToSet);
-        txvResult.setText(new StringBuilder(newTextToSet).reverse());
     }
 
     public String realizeOperation(TextView txvResult){
