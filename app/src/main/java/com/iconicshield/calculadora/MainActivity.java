@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         buttons.forEach(button -> button.setOnClickListener(view -> {
             String actualText = txvResult.getText().toString();
             String buttonText = button.getText().toString();
-            isSign = CalculatorService.SIGNS.containsValue(buttonText);
+            isSign = SIGNS.containsValue(buttonText);
             isPoint = buttonText.contains(pointSymbol);
             if (isValidSymbol(actualText, isSign, isPoint)){
                 String newText = actualText + buttonText;
@@ -107,14 +107,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Map<String, Object> factorsMap = getFactors(actualText);
-        if (Objects.equals(factorsMap.get("valid_operation"), true)){
-            calculator.setNum1(Double.parseDouble(String.valueOf(factorsMap.get("first_factor"))));
-            calculator.setNum2(Double.parseDouble(String.valueOf(factorsMap.get("second_factor"))));
-            calculator.setSign(String.valueOf(factorsMap.get("sign")));
+        if (Objects.equals(factorsMap.get(VALID_OPERATION), true)){
+            String firstFactor = String.valueOf(factorsMap.get(FIRST_FACTOR));
+            String secondFactor = String.valueOf(factorsMap.get(SECOND_FACTOR));
+            Object firstFactorNumber = 0;
+            Object secondFactorNumber = 0;
+            if (firstFactor.contains(pointSymbol)) {
+                firstFactorNumber = Double.parseDouble(firstFactor);
+            } else {
+                firstFactorNumber = Integer.parseInt(firstFactor);
+            }
+
+            if (secondFactor.contains(pointSymbol)) {
+                secondFactorNumber = Double.parseDouble(secondFactor);
+            } else {
+                secondFactorNumber = Integer.parseInt(secondFactor);
+            }
+            calculator.setSign(String.valueOf(factorsMap.get(SIGN)));
+            if (firstFactorNumber instanceof Integer && secondFactorNumber instanceof Integer){
+                calculator.setIntNum1((Integer)firstFactorNumber);
+                calculator.setIntNum2((Integer) secondFactorNumber);
+                txvResult.setText(String.valueOf(calculator.realizeOperationInteger()));
+                existSign = false;
+                return "Successful Operation";
+            }else if (firstFactorNumber instanceof Integer){
+                firstFactorNumber = Double.parseDouble(firstFactorNumber.toString());
+            }else if (secondFactorNumber instanceof Integer){
+                secondFactorNumber = Double.parseDouble(secondFactorNumber.toString());
+            }
+
+            calculator.setNum1((Double) firstFactorNumber);
+            calculator.setNum2((Double) secondFactorNumber);
             txvResult.setText(String.valueOf(calculator.realizeOperation()));
             existSign = false;
+            return "Successful Operation";
         }
-        return "";
+        return "This is not valid operation " + factorsMap.get(VALID_OPERATION);
     }
 
 

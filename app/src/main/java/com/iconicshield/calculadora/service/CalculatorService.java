@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class CalculatorService {
     private Double num1, num2;
+    private Integer intNum1, intNum2;
     private String sign;
     public static String plusSignString = PLUS_SIGN_STRING.toString();
     public static String plusSignClean = PLUS_SIGN_CLEAN.toString();
@@ -34,6 +35,12 @@ public class CalculatorService {
         this.sign = sign;
     }
 
+    public CalculatorService(Integer num1, Integer num2, String sign){
+        this.intNum1 = num1;
+        this.intNum2 = num2;
+        this.sign = sign;
+    }
+
     public Double realizeOperation(){
         String keySign = SIGNS.keySet().stream()
                 .filter(key -> Objects.equals(SIGNS.get(key), sign))
@@ -47,6 +54,22 @@ public class CalculatorService {
             return num1 - num2;
         }else{
             return num1 / num2;
+        }
+    }
+
+    public Integer realizeOperationInteger(){
+        String keySign = SIGNS.keySet().stream()
+                .filter(key -> Objects.equals(SIGNS.get(key), sign))
+                .collect(Collectors.toList()).get(0).toString();
+
+        if (keySign.equals(plusSignClean)){
+            return intNum1 + intNum2;
+        } else if (keySign.equals(multiSignClean)) {
+            return intNum1 * intNum2;
+        } else if (keySign.equals(substractSignString)) {
+            return intNum1 - intNum2;
+        }else{
+            return intNum1 / intNum2;
         }
     }
 
@@ -64,6 +87,22 @@ public class CalculatorService {
 
     public void setNum2(Double num){
         this.num2 = num;
+    }
+
+    public Integer getIntNum1() {
+        return intNum1;
+    }
+
+    public void setIntNum1(Integer num){
+        this.intNum1 = num;
+    }
+
+    public Integer getIntNum2(){
+        return intNum2;
+    }
+
+    public void setIntNum2(Integer num){
+        this.intNum2 = num;
     }
 
     public String getSign(){
