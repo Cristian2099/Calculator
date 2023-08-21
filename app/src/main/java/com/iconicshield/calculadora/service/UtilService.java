@@ -1,7 +1,5 @@
 package com.iconicshield.calculadora.service;
 
-import static com.iconicshield.calculadora.SymbolsEnum.DIV_SIGN_STRING;
-import static com.iconicshield.calculadora.SymbolsEnum.MULTI_SIGN_CLEAN;
 import static com.iconicshield.calculadora.SymbolsEnum.MULTI_SIGN_STRING;
 import static com.iconicshield.calculadora.SymbolsEnum.SUBSTRACT_SIGN_STRING;
 import static com.iconicshield.calculadora.service.CalculatorService.divSignString;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class UtilService {
 

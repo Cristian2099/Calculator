@@ -1,20 +1,33 @@
 package com.iconicshield.calculadora;
 
+import static com.iconicshield.calculadora.service.CalculatorService.SIGNS;
+import static com.iconicshield.calculadora.service.CalculatorService.multiSignClean;
+import static com.iconicshield.calculadora.service.CalculatorService.multiSignString;
+import static com.iconicshield.calculadora.service.CalculatorService.plusSignClean;
+import static com.iconicshield.calculadora.service.CalculatorService.plusSignString;
+import static com.iconicshield.calculadora.service.CalculatorService.pointSymbol;
+import static com.iconicshield.calculadora.service.UtilService.FIRST_FACTOR;
+import static com.iconicshield.calculadora.service.UtilService.SECOND_FACTOR;
+import static com.iconicshield.calculadora.service.UtilService.SIGN;
+import static com.iconicshield.calculadora.service.UtilService.VALID_OPERATION;
+import static com.iconicshield.calculadora.service.UtilService.getFactors;
+import static com.iconicshield.calculadora.service.UtilService.getLastChar;
+import static com.iconicshield.calculadora.service.UtilService.replaceCharInTextView;
+import static com.iconicshield.calculadora.service.ValidationService.existPoint;
+import static com.iconicshield.calculadora.service.ValidationService.existSign;
+import static com.iconicshield.calculadora.service.ValidationService.isValidSymbol;
+
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.iconicshield.calculadora.service.CalculatorService;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.iconicshield.calculadora.service.CalculatorService.*;
-import static com.iconicshield.calculadora.service.UtilService.*;
-import static com.iconicshield.calculadora.service.ValidationService.*;
-
-import com.iconicshield.calculadora.service.CalculatorService;
 
 public class MainActivity extends AppCompatActivity {
 

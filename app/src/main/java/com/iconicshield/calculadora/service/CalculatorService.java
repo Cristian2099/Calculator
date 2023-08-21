@@ -1,6 +1,13 @@
 package com.iconicshield.calculadora.service;
 
-import static com.iconicshield.calculadora.SymbolsEnum.*;
+import static com.iconicshield.calculadora.SymbolsEnum.DIV_SIGN_STRING;
+import static com.iconicshield.calculadora.SymbolsEnum.MULTI_SIGN_CLEAN;
+import static com.iconicshield.calculadora.SymbolsEnum.MULTI_SIGN_STRING;
+import static com.iconicshield.calculadora.SymbolsEnum.PLUS_SIGN_CLEAN;
+import static com.iconicshield.calculadora.SymbolsEnum.PLUS_SIGN_STRING;
+import static com.iconicshield.calculadora.SymbolsEnum.POINT_SYMBOL;
+import static com.iconicshield.calculadora.SymbolsEnum.POINT_SYMBOL_CLEAN;
+import static com.iconicshield.calculadora.SymbolsEnum.SUBSTRACT_SIGN_STRING;
 
 import com.iconicshield.calculadora.SymbolsEnum;
 
