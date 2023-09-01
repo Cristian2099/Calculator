@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class UtilService {
 
@@ -29,15 +30,14 @@ public class UtilService {
         }
     }
 
-    public static Map<String, Object> getFactors(String actualText){
-        List<String> actualTextDivided;
-        String actualSign = getSign(actualText);
-        actualTextDivided = Arrays.asList(actualText.split(actualSign));
-        if (actualTextDivided.size() == 2){
-            return Map.of(FIRST_FACTOR, actualTextDivided.get(0),
-                    SECOND_FACTOR, actualTextDivided.get(1),
+    public static Map<String, Object> getFactors(String textInScreen){
+        List<String> textInScreenDivided;
+        String actualSign = getSign(textInScreen);
+        textInScreenDivided = Arrays.asList(textInScreen.split(actualSign));
+        if (Objects.equals(textInScreenDivided.size(), 2)){
+            return Map.of(FIRST_FACTOR, textInScreenDivided.get(0),
+                    SECOND_FACTOR, textInScreenDivided.get(1),
                     SIGN, actualSign,
-
                     VALID_OPERATION, true);
         }
         return Map.of("valid_operation", false);

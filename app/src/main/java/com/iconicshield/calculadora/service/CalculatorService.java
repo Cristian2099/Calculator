@@ -48,7 +48,7 @@ public class CalculatorService {
         this.sign = sign;
     }
 
-    public Double realizeOperation(){
+    public Double realizeOperationDouble(){
         String keySign = SIGNS.keySet().stream()
                 .filter(key -> Objects.equals(SIGNS.get(key), sign))
                 .collect(Collectors.toList()).get(0).toString();

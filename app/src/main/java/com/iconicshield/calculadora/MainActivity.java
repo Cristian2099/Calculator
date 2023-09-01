@@ -114,21 +114,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String realizeOperation(TextView txvResult){
-        String actualText = txvResult.getText().toString();
-        if (actualText.isEmpty()){
-            return "Actual text is empty.";
+        String textInScreen = txvResult.getText().toString();
+        if (textInScreen.isEmpty()){
+            return "No exist text in screen.";
         }
 
-        Map<String, Object> factorsMap = getFactors(actualText);
+        Map<String, Object> factorsMap = getFactors(textInScreen);
         if (Objects.equals(factorsMap.get(VALID_OPERATION), true)){
-            String firstFactor = String.valueOf(factorsMap.get(FIRST_FACTOR));
+            String firstFactorString = String.valueOf(factorsMap.get(FIRST_FACTOR));
             String secondFactor = String.valueOf(factorsMap.get(SECOND_FACTOR));
             Object firstFactorNumber = 0;
             Object secondFactorNumber = 0;
-            if (firstFactor.contains(pointSymbol)) {
-                firstFactorNumber = Double.parseDouble(firstFactor);
+            if (firstFactorString.contains(pointSymbol)) {
+                firstFactorNumber = Double.parseDouble(firstFactorString);
             } else {
-                firstFactorNumber = Integer.parseInt(firstFactor);
+                firstFactorNumber = Integer.parseInt(firstFactorString);
             }
 
             if (secondFactor.contains(pointSymbol)) {
@@ -143,15 +143,14 @@ public class MainActivity extends AppCompatActivity {
                 txvResult.setText(String.valueOf(calculator.realizeOperationInteger()));
                 existSign = false;
                 return "Successful Operation";
-            }else if (firstFactorNumber instanceof Integer){
+            }else {
                 firstFactorNumber = Double.parseDouble(firstFactorNumber.toString());
-            }else if (secondFactorNumber instanceof Integer){
                 secondFactorNumber = Double.parseDouble(secondFactorNumber.toString());
             }
 
             calculator.setNum1((Double) firstFactorNumber);
             calculator.setNum2((Double) secondFactorNumber);
-            txvResult.setText(String.valueOf(calculator.realizeOperation()));
+            txvResult.setText(String.valueOf(calculator.realizeOperationDouble()));
             existSign = false;
             return "Successful Operation";
         }
