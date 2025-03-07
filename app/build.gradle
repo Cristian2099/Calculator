@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace 'com.iconicshield.calculadora'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.iconicshield.calculadora"
-        minSdk 24
+        minSdk 35
         targetSdk 34
         versionCode 12
         versionName "1.5.1"
